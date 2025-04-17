@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrappy the Dog's Feelings Experience</title>
+  <h1>Help Scrappy walk through his emotions</h1>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: white;
+      animation: pastelShift 12s infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    h1 {
+      color: #444;
+      margin-bottom: 30px;
+    }
+
+    .game-button {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+    }
+
+    .game-link {
+      padding: 12px 20px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      font-size: 18px;
+      text-decoration: none;
+      color: #333;
+      transition: 0.3s;
+      display: inline-block;
+    }
+
+    .game-link:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+
+    .lock-icon {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 30px;
+      height: 30px;
+      pointer-events: none;
+    }
+
+    .locked .game-link {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    @keyframes pastelShift {
+      0%   { background-color: #ffe4e1; }
+      25%  { background-color: #e0ffff; }
+      50%  { background-color: #f0e68c; }
+      75%  { background-color: #e6e6fa; }
+      100% { background-color: #d1ffd1; }
+    }
+
+    .dog-sprite {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      transform: translateX(-50%);
+      animation: dogJumpMove 10s infinite alternate;
+    }
+
+    @keyframes dogJumpMove {
+      0%   { left: 10%; bottom: 0; }
+      25%  { left: 30%; bottom: 50px; }
+      50%  { left: 50%; bottom: 0; }
+      75%  { left: 70%; bottom: 50px; }
+      100% { left: 90%; bottom: 0; }
+    }
+
+    button.reset-button {
+      margin-top: 30px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #ffcccc;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button.reset-button:hover {
+      background-color: #ffaaaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scrappy the Dog's Feelings Experience</h1>
+
+  <!-- Dog sprite -->
+  <img src="sprite.png" alt="Scrappy the Dog" class="dog-sprite"/>
+
+  <!-- Game Buttons -->
+  <div class="game-button" id="game1">
+    <a class="game-link" href="game1.html" onclick="unlockNext('game2')">Game 1: Scrappy’s Balloon</a>
+  </div>
+
+  <div class="game-button locked" id="game2">
+    <a class="game-link" href="game2.html" onclick="unlockNext('game3')">Game 2: Tears Help Too!</a>
+    <img src="lock.png" class="lock-icon" />
+  </div>
+
+  <div class="game-button locked" id="game3">
+    <a class="game-link" href="game3.html" onclick="unlockNext('game4')">Game 3: Facing Fears</a>
+    <img src="lock.png" class="lock-icon" />
+  </div>
+
+  <div class="game-button locked" id="game4">
+    <a class="game-link" href="game4.html">Game 4: Calming Anger</a>
+    <img src="lock.png" class="lock-icon" />
+  </div>
+
+  <!-- Reset button -->
+  <button class="reset-button" onclick="resetProgress()"> Reset Progress</button>
+
+  <script>
+    // Unlock the next game when current game is played
+    function unlockNext(nextId) {
+      localStorage.setItem(nextId + "_unlocked", "true");
+    }
+
+    // On page load, unlock games that were previously unlocked
+    window.onload = function () {
+      ["game2", "game3", "game4"].forEach(id => {
+        if (localStorage.getItem(id + "_unlocked") === "true") {
+          const button = document.getElementById(id);
+          button.classList.remove("locked");
+          const lockIcon = button.querySelector(".lock-icon");
+          if (lockIcon) lockIcon.remove();
+        }
+      });
+    };
+
+    // Reset all progress
+    function resetProgress() {
+      localStorage.clear();
+      location.reload(); // Refresh page to show locks again
+    }
+  </script>
+</body>
+</html>
